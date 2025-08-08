@@ -1,0 +1,71 @@
+"use client"
+
+import { useRequireAuth } from "@/components/auth-context"
+import { KpiGrid } from "@/components/kpi-cards"
+import { KpiLineChart } from "@/components/charts/kpi-line-chart"
+import { ResourceTimeline } from "@/components/resource-timeline"
+import { SectionCard } from "@/components/section-card"
+import { BarChart3, Activity } from 'lucide-react'
+
+export default function DashboardPage() {
+  const user = useRequireAuth()
+
+  const kpis =
+    user?.role === "Director"
+      ? [
+          { title: "Total Projects", value: 148, delta: "+7% MoM" },
+          { title: "Active Projects", value: 63, delta: "+4% MoM" },
+          { title: "Team Availability", value: "73%", delta: "+2% MoM" },
+          { title: "On-track (SLA)", value: "92%", delta: "+1% MoM" },
+        ]
+      : [
+          { title: "My Team Projects", value: 18, delta: "+5% MoM" },
+          { title: "Active Now", value: 7, delta: "+2% MoM" },
+          { title: "Availability", value: "68%", delta: "+3% MoM" },
+          { title: "Blocked", value: 1, delta: "-1 vs last week" },
+        ]
+
+  const today = new Date()
+  const horizonEnd = new Date()
+  horizonEnd.setDate(today.getDate() + 13)
+
+  const assignments = [
+    { id: "a1", person: "Somchai T.", project: "Core Banking Upgrade", start: toISO(today, 0), end: toISO(today, 4), color: "#3F8CFF" },
+    { id: "a2", person: "Arisa W.", project: "ERP Rollout", start: toISO(today, 2), end: toISO(today, 8), color: "#51b206" },
+    { id: "a3", person: "Preecha K.", project: "eKYC POC", start: toISO(today, 6), end: toISO(today, 12), color: "#f59e0b" },
+  ]
+
+  return (
+    <div className="space-y-6">
+      <KpiGrid items={kpis} />
+
+      <div className="grid gap-6 xl:grid-cols-3">
+        <SectionCard
+          title="KPI Trends"
+          description="Capacity vs Utilization"
+          icon={BarChart3}
+          accent="violet"
+          className="xl:col-span-1"
+        >
+          <KpiLineChart />
+        </SectionCard>
+
+        <SectionCard
+          title="Resource Usage (next 14 days)"
+          description="Who is working on what and when"
+          icon={Activity}
+          accent="blue"
+          className="xl:col-span-2"
+        >
+          <ResourceTimeline assignments={assignments} start={today} end={horizonEnd} />
+        </SectionCard>
+      </div>
+    </div>
+  )
+}
+
+function toISO(base: Date, addDays: number) {
+  const d = new Date(base)
+  d.setDate(d.getDate() + addDays)
+  return d.toISOString().slice(0, 10)
+}

@@ -1,0 +1,38 @@
+/// components/auth-context.tsx
+import React from "react";
+import { User } from "@/types";
+
+const STORAGE_KEY = "authUser";
+
+export const AuthContext = React.createContext<{
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+}>({
+  user: null,
+  setUser: () => {},
+});
+
+export const AuthProvider: React.FC = ({ children }) => {
+  const [user, setUser] = React.useState<User | null>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) return JSON.parse(raw) as User;
+      } catch {}
+    }
+    return null;
+  });
+
+  return (
+    <AuthContext.Provider value={{ user, setUser }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+// app/page.tsx
+import { redirect } from "next/navigation";
+
+export default function Page() {
+  redirect("/dashboard");
+}

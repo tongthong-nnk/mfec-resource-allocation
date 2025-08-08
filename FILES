@@ -1,0 +1,208 @@
+/// app/globals.css
+/*
+  Brand blue-gray palette + global gradients
+  Top -> Bottom: lighter to darker per request.
+*/
+:root {
+  --brand-top: #6B7E9A;   /* lighter blue-gray */
+  --brand-mid: #5A6D8C;   /* primary blue-gray */
+  --brand-bottom: #45566F; /* darker blue-gray */
+}
+
+html, body { min-height: 100%; }
+
+/* App background (subtle, darkening downward) */
+body {
+  background: linear-gradient(to bottom, var(--brand-top), var(--brand-mid) 50%, var(--brand-bottom));
+}
+
+/* Sidebar theming (shadcn/ui Sidebar primitives) */
+/* We override the sidebar container with a vertical blue-gray gradient and set text tokens for contrast. */
+[data-sidebar="sidebar"] {
+  /* Gradient background that darkens bottom-down */
+  background-image: linear-gradient(
+    to bottom,
+    rgba(107, 126, 154, 0.98),
+    rgba(90, 109, 140, 0.98) 50%,
+    rgba(69, 86, 111, 1)
+  );
+
+  /* Improve contrast for text/icons within the sidebar */
+  --sidebar-foreground: 210 40% 98%;
+  --sidebar-accent-foreground: 210 40% 98%;
+  --sidebar-primary-foreground: 210 40% 98%;
+  --sidebar-border: 220 13% 20%;
+}
+
+/* Menu button hover on dark sidebar */
+[data-sidebar="sidebar"] [data-sidebar="menu-button"]:hover,
+[data-sidebar="sidebar"] [data-sidebar="menu-button"][data-active="true"] {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Glassy header like the reference UI */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: linear-gradient(to bottom, rgba(246, 249, 252, 0.85), rgba(239, 242, 247, 0.85));
+  backdrop-filter: saturate(120%) blur(14px);
+  -webkit-backdrop-filter: saturate(120%) blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 14px;
+  margin: 12px 14px;
+  box-shadow: 0 6px 18px rgba(17, 24, 39, 0.12);
+}
+
+// components/app-sidebar.tsx
+"use client"
+
+import * as React from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail,
+} from "@/components/ui/sidebar"
+import { Badge } from "@/components/ui/badge"
+import { Home, FolderKanban, CalendarDays, Users2, Settings, UserRoundCog } from 'lucide-react'
+import { useAuth } from "./auth-context"
+
+type Item = {
+  title: string
+  url: string
+  icon: React.ComponentType<{ className?: string }>
+  roles?: Array<"Admin" | "Director" | "Manager">
+  badge?: string
+}
+
+const baseNav: Item[] = [
+  { title: "Dashboard", url: "/dashboard", icon: Home },
+  { title: "Projects", url: "/projects", icon: FolderKanban },
+  { title: "Resources", url: "/resources", icon: CalendarDays },
+  { title: "Teams", url: "/teams", icon: Users2 },
+]
+
+const adminNav: Item[] = [{ title: "User Management", url: "/admin/users", icon: UserRoundCog, roles: ["Admin"] }]
+
+const footerNav: Item[] = [{ title: "Settings", url: "/settings", icon: Settings }]
+
+export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname()
+  const { user } = useAuth()
+
+  const isActive = (url: string) => pathname?.startsWith(url)
+
+  const allItems = React.useMemo(() => {
+    const list = [...baseNav, ...(user?.role === "Admin" ? adminNav : []), ...footerNav]
+    return list
+  }, [user?.role])
+
+  return (
+    <Sidebar
+      variant="floating"
+      collapsible="icon"
+      className="text-white"
+      {...props}
+    >
+      <SidebarHeader className="p-4">
+        <Link href="/dashboard" className="flex items-center gap-3">
+          <div className="h-9 w-9 rounded-full bg-white/20 ring-1 ring-white/40" />
+          <div className="flex flex-col leading-tight">
+            <span className="text-sm font-semibold text-white">MFEC</span>
+            <span className="text-[11px] text-white/75">Resource Allocation</span>
+          </div>
+        </Link>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-white/70">Navigation</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {allItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)} className="text-white">
+                    <Link href={item.url}>
+                      <item.icon className="opacity-90" />
+                      <span className="opacity-95">{item.title}</span>
+                      {item.badge ? <Badge className="ml-auto bg-white/20 text-white">{item.badge}</Badge> : null}
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+      <SidebarRail />
+    </Sidebar>
+  )
+}
+
+// components/app-header.tsx
+"use client"
+
+import { SidebarTrigger } from "@/components/ui/sidebar"
+import { Separator } from "@/components/ui/separator"
+import { Bell, LogOut, UserCircle2 } from 'lucide-react'
+import { Button } from "@/components/ui/button"
+import { useAuth } from "./auth-context"
+
+export function AppHeader() {
+  const { user, logout } = useAuth()
+  return (
+    <header className="app-header">
+      <div className="flex h-16 items-center gap-2 px-4">
+        <SidebarTrigger className="-ml-1 text-slate-800/80 hover:text-slate-900" />
+        <Separator orientation="vertical" className="mr-2 h-4" />
+        <div className="flex items-center gap-2 text-sm">
+          <span className="font-medium text-slate-800">Resource Allocation</span>
+          <span className="text-slate-500">by MFEC</span>
+        </div>
+        <div className="ml-auto flex items-center gap-2">
+          <Button variant="ghost" size="icon" aria-label="Notifications" className="text-slate-700 hover:text-slate-900">
+            <Bell className="h-5 w-5" />
+          </Button>
+          <div className="flex items-center gap-3 rounded-full bg-white/70 px-3 py-1 ring-1 ring-white/60 backdrop-blur">
+            <UserCircle2 className="h-5 w-5 text-slate-500" />
+            <div className="hidden md:flex flex-col leading-tight">
+              <span className="text-sm font-semibold text-slate-800">{user?.name ?? "User"}</span>
+              <span className="text-xs text-slate-500">{user?.role ?? "-"}</span>
+            </div>
+            <Button size="sm" variant="outline" onClick={logout} className="ml-1 bg-transparent">
+              <LogOut className="mr-2 h-4 w-4" />
+              Sign out
+            </Button>
+          </div>
+        </div>
+      </div>
+    </header>
+  )
+}
+
+// app/(app)/layout.tsx
+"use client"
+
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/app-sidebar"
+import { AppHeader } from "@/components/app-header"
+
+export default function AppLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset className="bg-[#F6F9FC] dark:bg-background pt-2">
+        <AppHeader />
+        <div className="flex-1 p-3 md:p-6">{children}</div>
+      </SidebarInset>
+    </SidebarProvider>
+  )
+}
