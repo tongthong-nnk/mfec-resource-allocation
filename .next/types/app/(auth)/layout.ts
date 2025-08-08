@@ -1,8 +1,8 @@
-// File: /Users/trongsorn/mfec-resource-allocation/app/(auth)/layout.tsx
-import * as entry from '../../../../app/(auth)/layout.js'
+// File: /Users/trongsorn/mfec-resource-allocation/src/app/(auth)/layout.tsx
+import * as entry from '../../../../src/app/(auth)/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
-type TEntry = typeof import('../../../../app/(auth)/layout.js')
+type TEntry = typeof import('../../../../src/app/(auth)/layout.js')
 
 // Check that the entry is a valid entry
 checkFields<Diff<{

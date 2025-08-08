@@ -12,11 +12,11 @@ import {
 import { allProjects, allTeams } from "@/lib/data"
 
 const teamColors: Record<string, string> = {
-  Finance: "hsl(var(--chart-1))",
-  Enterprise: "hsl(var(--chart-2))",
-  "AI/ML": "hsl(var(--chart-3))",
-  Mobility: "hsl(var(--chart-4))",
-  Support: "hsl(var(--chart-5))",
+  Finance: "hsl(var(--chart-purple-1))",
+  Enterprise: "hsl(var(--chart-purple-2))",
+  "AI/ML": "hsl(var(--chart-purple-3))",
+  Mobility: "hsl(var(--chart-purple-4))",
+  Support: "hsl(var(--chart-purple-5))",
 }
 
 export function AllocationDonutChart() {

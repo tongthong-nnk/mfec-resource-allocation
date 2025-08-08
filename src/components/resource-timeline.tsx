@@ -77,7 +77,7 @@ export function ResourceTimeline({
                           className="absolute left-0 top-1/2 h-6 -translate-y-1/2 rounded-md text-xs text-white flex items-center px-2 shadow"
                           style={{
                             width: `calc(${span} * 100% + ${(span - 1) * 1}px)`,
-                            backgroundColor: a.color ?? "#3e30d9",
+                            backgroundColor: a.color ?? "hsl(142, 76%, 36%)",
                           }}
                           title={`${a.person} on ${a.project}`}
                         >

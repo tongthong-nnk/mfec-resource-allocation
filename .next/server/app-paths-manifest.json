@@ -1,5 +1,9 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-  "/(auth)/login/page": "app/(auth)/login/page.js",
-  "/(app)/dashboard/page": "app/(app)/dashboard/page.js"
+  "/api/auth/microsoft/route": "app/api/auth/microsoft/route.js",
+  "/page": "app/page.js",
+  "/(app)/dashboard/page": "app/(app)/dashboard/page.js",
+  "/(app)/teams/page": "app/(app)/teams/page.js",
+  "/(app)/projects/page": "app/(app)/projects/page.js",
+  "/(app)/teams/[id]/page": "app/(app)/teams/[id]/page.js",
+  "/(auth)/login/page": "app/(auth)/login/page.js"
 }

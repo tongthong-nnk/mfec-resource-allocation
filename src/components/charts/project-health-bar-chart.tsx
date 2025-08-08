@@ -15,19 +15,19 @@ const chartConfig = {
   },
   "on-track": {
     label: "On Track",
-    color: "hsl(var(--chart-2))",
+    color: "hsl(var(--chart-blue-2))",
   },
   "at-risk": {
     label: "At Risk",
-    color: "hsl(var(--chart-3))",
+    color: "hsl(var(--chart-blue-3))",
   },
   "delayed": {
     label: "Delayed",
-    color: "hsl(var(--chart-4))",
+    color: "hsl(var(--chart-blue-4))",
   },
   "completed": {
     label: "Completed",
-    color: "hsl(var(--chart-1))",
+    color: "hsl(var(--chart-blue-1))",
   },
 }
 
