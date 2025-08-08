@@ -37,10 +37,10 @@ const footerNav: Item[] = [{ title: "Settings", url: "/settings", icon: Settings
 
 export default function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
-  const { user } = useAuth()
+  const { user, hydrated } = useAuth()
   const items = React.useMemo(
-    () => [...baseNav, ...(user?.role === "Admin" ? adminNav : []), ...footerNav],
-    [user?.role]
+    () => [...baseNav, ...(hydrated && user?.role === "Admin" ? adminNav : []), ...footerNav],
+    [user?.role, hydrated]
   )
 
   const isActive = (url: string) => pathname?.startsWith(url)

@@ -79,7 +79,7 @@ export default function LoginPage() {
         <div className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="email" className="text-slate-300">Email (for Dev Preview)</Label>
-            <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@mfec.co.th" className="bg-slate-700/50 text-white border-slate-600 focus:ring-blue-500" />
+            <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@mfec.co.th" className="bg-slate-700/50 text-white border-slate-600 focus:ring-white" />
           </div>
           <div className="grid gap-2">
             <Label className="text-slate-300">Role</Label>
@@ -95,7 +95,7 @@ export default function LoginPage() {
             </Select>
           </div>
           {message && <p className="text-sm text-red-400">{message}</p>}
-          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white" onClick={handleDevLogin}>
+          <Button className="w-full bg-white hover:bg-gray-100 text-slate-900 font-semibold shadow-lg hover:shadow-xl transition-all duration-200" onClick={handleDevLogin}>
             <LogIn className="mr-2 h-4 w-4" />
             Continue
           </Button>

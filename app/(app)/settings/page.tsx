@@ -9,7 +9,7 @@ import { useEffect, useState } from "react"
 import { Palette, UserCircle } from 'lucide-react'
 
 export default function SettingsPage() {
-  const { user } = useAuth()
+  const { user, hydrated } = useAuth()
   const [dark, setDark] = useState(false)
 
   useEffect(() => {
@@ -43,11 +43,11 @@ export default function SettingsPage() {
         <div className="space-y-3 text-sm">
           <div className="flex flex-col">
             <span className="text-muted-foreground">Email</span>
-            <span className="font-medium">{user?.email}</span>
+            <span className="font-medium">{hydrated ? user?.email : "Loading..."}</span>
           </div>
           <div className="flex flex-col">
             <span className="text-muted-foreground">Role</span>
-            <span className="font-medium">{user?.role}</span>
+            <span className="font-medium">{hydrated ? user?.role : "Loading..."}</span>
           </div>
           <Button className="mt-2" variant="outline">
             Edit profile

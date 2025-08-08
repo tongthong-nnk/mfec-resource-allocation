@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { useAuth } from "./auth-context"
 
 export function AppHeader() {
-  const { user, logout } = useAuth()
+  const { user, logout, hydrated } = useAuth()
   return (
     <header className="app-header">
       <div className="flex h-16 items-center gap-2 px-4">
@@ -24,8 +24,12 @@ export function AppHeader() {
           <div className="flex items-center gap-3 rounded-full bg-white/70 px-3 py-1 ring-1 ring-white/60 backdrop-blur">
             <UserCircle2 className="h-5 w-5 text-slate-500" />
             <div className="hidden md:flex flex-col leading-tight">
-              <span className="text-sm font-semibold text-slate-800">{user?.name ?? "User"}</span>
-              <span className="text-xs text-slate-500">{user?.role ?? "-"}</span>
+              <span className="text-sm font-semibold text-slate-800">
+                {hydrated ? (user?.name ?? "User") : "User"}
+              </span>
+              <span className="text-xs text-slate-500">
+                {hydrated ? (user?.role ?? "-") : "-"}
+              </span>
             </div>
             <Button size="sm" variant="outline" onClick={logout} className="ml-1 bg-transparent">
               <LogOut className="mr-2 h-4 w-4" />
